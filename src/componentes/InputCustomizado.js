@@ -19,13 +19,17 @@ export default class InputCustomizado extends Component{
   }
 
   componentDidMount() {
-    PubSub.subscribe('erro-validacao', function(topico, erro){
-      if (erro.field === this.propos.nome) {
-        this.setState({
-          msgErro: erro.defaultMessage
-        });
+    PubSub.subscribe("erro-validacao", function (topico, erro){
+      if (erro.field === this.props.name) {
+        this.setState({ msgErro: erro.defaultMessage });
       }
     }.bind(this));
+
+    PubSub.subscribe('limpa-erros', function (topico) {
+      this.setState({
+        msgErro: ''
+      });
+    }.bind(this))
   }
     
 }

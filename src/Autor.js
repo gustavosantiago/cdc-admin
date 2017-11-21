@@ -26,13 +26,17 @@ export class FormularioAutor extends Component{
         email: this.state.email, 
         senha: this.state.senha
       }),
-      success: function (response){
-        PubSub.publish('atualiza-lista-autores', response);
-      }, 
-      error: function(response){
-        if (response.status === 400) {
-          new TratadorErros().publicaErros(response.responseJSON)
+      success: function (novaListagem){
+        PubSub.publish('atualiza-lista-autores', novaListagem);
+        this.setState({nome: '', email: '', senha: ''});
+      }.bind(this), 
+      error: function(resposta){
+        if (resposta.status === 400) {
+          new TratadorErros().publicaErros(resposta.responseJSON)
         }
+      }, 
+      beforeSend: function() {
+        PubSub.publish('limpa-erros', {});
       }
     });
   }
@@ -50,14 +54,14 @@ export class FormularioAutor extends Component{
   }
 
   render() {
-    return(
-      <div className="pure-form pure-form-aligned">
+    return (
+      <div className="pure-form pure-form-aligner">
         <form className="pure-form pure-form-aligned" onSubmit={this.enviaForm} method="post">
-          <InputCustomizado id="nome" type="text" name="nome" value={this.state.nome} onChange={this.setNome} label="Nome"/>                                              
-          <InputCustomizado id="email" type="email" name="email" value={this.state.email} onChange={this.setEmail} label="Email"/>                                              
-          <InputCustomizado id="senha" type="password" name="senha" value={this.state.senha} onChange={this.setSenha} label="Senha"/>                                                   <div className="pure-control-group">                                  
-            <label></label>
-            <button type="submit" className="pure-button pure-button-primary">Gravar</button>                                    
+          <InputCustomizado id="nome" type="text" name="nome" value={this.state.name} onChange={this.setName} label="Nome" />
+          <InputCustomizado id="email" type="email" name="email" value={this.state.email} onChange={this.setEmail} label="Email" />
+          <InputCustomizado id="senha" type="password" name="senha" value={this.state.senha} onChange={this.setSenha} label="Senha" />
+          <div className="pure-control-group">                                 <label></label>
+            <button type="submit" className="pure-button pure-button-primary">Gravar</button>
           </div>
         </form>
       </div>
@@ -66,7 +70,6 @@ export class FormularioAutor extends Component{
 }
 
 class TabelaAutores extends Component{
-
   render(){
     return(
       <div className="content" id="content">
@@ -119,11 +122,16 @@ export default class AutorBox extends Component {
     }.bind(this));
   }
   
-  render(){
-    return(
+  render() {
+    return (
       <div>
-        <FormularioAutor/>
-        <TabelaAutores lista={this.state.lista}/>
+        <div className="header">
+          <h1>Cadastro de autores</h1>
+        </div>
+        <div className="content" id="content">
+          <FormularioAutor />
+          <TabelaAutores lista={this.state.lista} />
+        </div>
       </div>
     );
   }
