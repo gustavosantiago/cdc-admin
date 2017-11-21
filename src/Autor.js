@@ -101,9 +101,9 @@ class TabelaAutores extends Component{
 }
 
 export default class AutorBox extends Component {
-  constructor() {
+  constructor(){
     super();
-    this.state = {lista : []};
+    this.state = { lista: [] };
   }
   
   componentDidMount(){
@@ -132,6 +132,7 @@ export default class AutorBox extends Component {
           <FormularioAutor />
           <TabelaAutores lista={this.state.lista} />
         </div>
+
       </div>
     );
   }
